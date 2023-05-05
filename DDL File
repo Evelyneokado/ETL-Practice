@@ -1,0 +1,119 @@
+-- Creating the databases and tables for the project
+
+DROP DATABASE IF EXISTS emr;
+CREATE DATABASE emr;
+USE emr;
+DROP TABLE IF EXISTS Patients;
+CREATE TABLE Patients (
+    PatientID INT(8) PRIMARY KEY NOT NULL,
+    PatientPK INT(8) NOT NULL,
+    MFLCode INT(5) NOT NULL,
+    FacilityName NVARCHAR(200),
+    FirstName NVARCHAR(100),
+    LastName NVARCHAR(100),
+    DOB DATE,
+    Age INT(3),
+    Gender NVARCHAR(20),
+    MaritalStatus NVARCHAR(200),
+    County NVARCHAR(100),
+    Constituency NVARCHAR(100),
+    Village NVARCHAR(100));
+
+
+INSERT INTO patients 
+    VALUES('213456','45678','34567', 'Mbita County','Emma','Stone','1989-06-15','34','Female','Single','Nairobi','Embakasi','Harmony'),
+    ('124356','45678','34567', 'Mbita County','Mary','Kile','1998-03-24','25','Female','Married','Nairobi','Embakasi','Harambee'),
+    ('123457','45678','34567', 'Mbita County','Emma','Stone','1989-06-15','34','Female','Single','Nairobi','Embakasi','Harmony'),
+    ('123436','45678','34567', 'Mbita County','Emma','Stone','1989-06-15','34','Female','Single','Nairobi','Embakasi','Harmony');
+
+
+
+DROP TABLE IF EXISTS Visits;
+
+CREATE TABLE Visits (
+      PatientID INT(8) PRIMARY KEY NOT NULL,
+      PatientPK INT(8) NOT NULL,
+      MFLCode INT(5) NOT NULL,
+      FacilityName NVARCHAR(200),
+      VisitDate DATE,
+      NextAppointmentDate DATE,
+      VisitCentre NVARCHAR(100));
+
+INSERT INTO Visits 
+      VALUES('213456','45678','34567','Mbita County','2019-09-18','2019-09-24','HTS'),
+            ('124356','45678','34567', 'Mbita County','2020-05-25','2020-05-29','GEN'),
+            ('123457','45678','34567', 'Mbita County','2021-12-27','2022-01-23','MCH'),
+            ('123436','45678','34567', 'Mbita County','2022-04-23','2022-05-23','LAB');
+
+
+--- Creating tables in the etl database
+
+DROP DATABASE IF EXISTS etl;
+CREATE DATABASE etl;    
+USE etl;
+
+DROP TABLE IF EXISTS etl_patients;
+
+CREATE TABLE etl_patients (
+        PatientID INT(8) PRIMARY KEY NOT NULL,
+        PatientPK INT(8) NOT NULL,
+        MFLCode INT(5) NOT NULL,
+        FacilityName NVARCHAR(200),
+        FirstName NVARCHAR(100),
+        LastName NVARCHAR(100),
+        DOB DATE,
+        Age INT(3),
+        Gender NVARCHAR(20),
+        MaritalStatus NVARCHAR(200),
+        County NVARCHAR(100),
+        Constituency NVARCHAR(100),
+        Village NVARCHAR(100)); 
+
+DROP TABLE IF EXISTS etl_visits;
+CREATE TABLE etl_visits (
+        PatientID INT(8) PRIMARY KEY NOT NULL,
+        PatientPK INT(8) NOT NULL,
+        MFLCode INT(5) NOT NULL,
+        FacilityName NVARCHAR(200),
+        FirstName nvarchar(100),
+        LastName nvarchar(100),
+        VisitDate DATE,
+        NextAppointmentDate DATE,
+        VisitCentre NVARCHAR(100));
+
+--- Creating tables in the DWH database
+
+DROP DATABASE IF EXISTS dwh;
+CREATE DATABASE dwh;   
+USE dwh;
+
+DROP TABLE IF EXISTS dwh_patients;
+CREATE TABLE dwh_patients (
+        PatientID INT(8) PRIMARY KEY NOT NULL,
+        PatientPK INT(8) NOT NULL,
+        MFLCode INT(5) NOT NULL,
+        FacilityName NVARCHAR(200),
+        FirstName NVARCHAR(100),
+        LastName NVARCHAR(100),
+        DOB DATE,
+        Age INT(3),
+        Gender NVARCHAR(20),
+        MaritalStatus NVARCHAR(200),
+        County NVARCHAR(100),
+        Constituency NVARCHAR(100),
+        Village NVARCHAR(100));
+
+DROP TABLE IF EXISTS dwh_visits;
+CREATE TABLE dwh_visits (
+      PatientID INT(8) PRIMARY KEY NOT NULL,
+      PatientPK INT(8) NOT NULL,
+      MFLCode INT(5) NOT NULL,
+      FacilityName NVARCHAR(200),
+      VisitDate DATE,
+      NextAppointmentDate DATE,
+      DaysDiff INT(3),
+      VisitCentre NVARCHAR(100));
+ 
+     
+      
+      
