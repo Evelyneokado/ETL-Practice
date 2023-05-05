@@ -1,0 +1,41 @@
+USE etl;
+DROP PROCEDURE IF EXISTS Populate_etl_tables;
+
+DELIMITER //
+CREATE PROCEDURE Populate_etl_tables()
+BEGIN
+
+TRUNCATE etl_patients;
+INSERT INTO etl_patients 
+        SELECT * FROM emr.patients;
+
+TRUNCATE etl_visits;
+INSERT INTO etl_visits (
+        PatientID,
+        PatientPK,
+        MFLCode,
+        FacilityName,
+        FirstName,
+        LastName,
+        VisitDate,
+        NextAppointmentDate,
+        VisitCentre
+        )
+SELECT 
+        v.PatientID,
+        v.PatientPK,
+        v.MFLCode,
+        v.FacilityName,
+        p.FirstName, 
+        p.LastName, 
+        v.VisitDate,
+        v.NextAppointmentDate,
+        v.VisitCentre
+        FROM emr.visits v
+        INNER JOIN emr.patients p
+        ON v.PatientID = p.PatientID AND v.PatientPK = p.PatientPK AND v.MFLCode = p.MFLCode;
+        
+END //
+    
+DELIMITER ;
+CALL Populate_etl_tables();
