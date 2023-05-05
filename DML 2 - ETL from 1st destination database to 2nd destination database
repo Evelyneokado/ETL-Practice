@@ -1,0 +1,42 @@
+-- Populating the 2nd destination database using data from the 1st destination database
+
+USE dwh;
+DROP PROCEDURE IF EXISTS Populate_dwh_tables;
+
+DELIMITER //
+CREATE PROCEDURE Populate_dwh_tables()
+BEGIN
+
+TRUNCATE dwh_patients;
+
+INSERT INTO dwh_patients 
+      SELECT * FROM etl.etl_patients;
+
+TRUNCATE dwh_visits;
+
+INSERT INTO dwh_visits (
+      PatientID,
+      PatientPK,
+      MFLCode,
+      FacilityName,
+      VisitDate,
+      NextAppointmentDate,
+      DaysDiff,
+      VisitCentre
+      )
+SELECT 
+      PatientID,
+      PatientPK,
+      MFLCode,
+      FacilityName,
+      VisitDate,
+      NextAppointmentDate,
+      datediff(NextAppointmentDate,VisitDate) AS DaysDiff,
+      VisitCentre
+      FROM etl.etl_visits;
+      
+END //
+    
+DELIMITER ;
+CALL Populate_dwh_tables();
+
